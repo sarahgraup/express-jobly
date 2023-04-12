@@ -84,14 +84,19 @@ class Company {
       criterias.push(`name ILIKE '%${filterBy.nameLike}%'`);
     }
     if(filterBy.minEmployees){
-      criterias.push(`num_employees >= ${filterBy.minEmployees}`);
+      criterias.push(`"num_employees" >= ${filterBy.minEmployees}`);
     }
     if(filterBy.maxEmployees){
-      criterias.push(`num_employees <= ${filterBy.maxEmployees}`);
+      criterias.push(`"num_employees" <= ${filterBy.maxEmployees}`);
     }
 
+    console.log("CRITERIAS", criterias);
     const criteriaSql = criterias.join(" AND ");
+    console.log("CRITERIA SQL", criteriaSql);
+    `FROM companies ${WHERE}`
 
+    `WHERE name ILIKE $1`
+    
     const filteredCompaniesRes = await db.query(
         `SELECT handle,
                 name,
