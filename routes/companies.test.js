@@ -114,14 +114,12 @@ describe("GET /companies", function () {
 
     test("filtering works if no companies adhere to filter", async function () {
       const resp = await (await request(app).get("/companies")).send(
-        "minEmployees: 5"
+        "minEmployees=5"
       );
       expect(resp.body).toEqual({
         companies: []
       });
     });
-
-
   });
 
   test("fails: test next() handler", async function () {
