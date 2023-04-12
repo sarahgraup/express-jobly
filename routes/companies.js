@@ -51,7 +51,15 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
  */
 
 router.get("/", async function (req, res, next) {
+  // http://localhost:3001/companies/?minEmployees=5
+  // if req.query exists
+    // validate the keys contained in req.query then filter if so
+    // min/max convert into an integer
+    // calling our model static function and AWAIT
+    // {minEmployees: 5}
   const companies = await Company.findAll();
+
+
   return res.json({ companies });
 });
 
