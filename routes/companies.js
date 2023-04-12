@@ -58,12 +58,27 @@ router.get("/", async function (req, res, next) {
   // min/max convert into an integer
   // calling our model static function and AWAIT
   // {minEmployees: 5}
+
   if (req.query) {
-    if (req.query.minEmployees) req.query.minEmployees = +req.query.minEmployees;
-    if (req.query.maxEmployees) req.query.maxEmployees = +req.query.maxEmployees;
+    const query = {...req.query};
+
+    if (query.minEmployees) {
+      query.minEmployees = +query.minEmployees;
+    }
+
+    if (query.maxEmployees){
+      query.maxEmployees = +query.maxEmployees;
+    }
+
+    if (query.minEmployees > query.maxEmployees) {
+      throw new BadRequestError('min needs to be less than max');
+    }
+
+    console.log("TYPE OF MIN/MAX EMPLOYEE", typeof(query.minEmployees), typeof(query.maxEmployees));
+    console.log('REQ QUERY', query);
 
     const validator = jsonschema.validate(
-      req.query,
+      query,
       filterCompanySchema,
       { required: true }
     );
@@ -73,15 +88,13 @@ router.get("/", async function (req, res, next) {
       throw new BadRequestError(errs);
     }
 
-    if (req.query.minEmployees > req.query.maxEmployees) {
-      throw new BadRequestError('min needs to be less than max');
-    }
-    const filteredCompanies = await Company.findSome(req.query)
+    console.log("I'M VALID!!!!");
+    const filteredCompanies = await Company.findSome(query);
 
-
+    return res.json({ filteredCompanies });
   }
-  const companies = await Company.findAll();
 
+  const companies = await Company.findAll();
 
   return res.json({ companies });
 });
