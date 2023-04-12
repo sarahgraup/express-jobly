@@ -66,6 +66,38 @@ class Company {
     return companiesRes.rows;
   }
 
+  /** Find matching companies based on filter.
+   *
+   * @param {Object} filterBy
+   * example: {nameLike: "net", minEmployees: 5, maxEmployees: 10}
+   * Not all filters required.
+   *
+   * Returns [{ handle, name, description, numEmployees, logoUrl }, ...]
+   * */
+
+  static async findSome(filterBy) {
+    // TODO: filterBy is obj  // {minEmployees: 5}
+    // check which variables - nameLike, minEmployees, maxEmployees
+    let criteria = [];
+
+    if (filterBy.nameLike) {
+      criteria.push(``)
+    }
+
+    const filteredCompaniesRes = await db.query(
+        `SELECT handle,
+                name,
+                description,
+                num_employees AS "numEmployees",
+                logo_url AS "logoUrl"
+           FROM companies
+           WHERE $1
+           ORDER BY name`,
+        [criteria]
+    );
+    return filteredCompaniesRes.rows;
+  }
+
   /** Given a company handle, return data about company.
    *
    * Returns { handle, name, description, numEmployees, logoUrl, jobs }
