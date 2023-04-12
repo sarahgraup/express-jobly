@@ -78,11 +78,19 @@ class Company {
   static async findSome(filterBy) {
     // TODO: filterBy is obj  // {minEmployees: 5}
     // check which variables - nameLike, minEmployees, maxEmployees
-    let criteria = [];
+    const criterias = [];
 
     if (filterBy.nameLike) {
-      criteria.push(``)
+      criterias.push(`name ILIKE '%${filterBy.nameLike}%'`);
     }
+    if(filterBy.minEmployees){
+      criterias.push(`num_employees >= ${filterBy.minEmployees}`);
+    }
+    if(filterBy.maxEmployees){
+      criterias.push(`num_employees <= ${filterBy.maxEmployees}`);
+    }
+
+    const criteriaSql = criterias.join(" AND ");
 
     const filteredCompaniesRes = await db.query(
         `SELECT handle,
@@ -93,7 +101,7 @@ class Company {
            FROM companies
            WHERE $1
            ORDER BY name`,
-        [criteria]
+        [criteriaSql]
     );
     return filteredCompaniesRes.rows;
   }

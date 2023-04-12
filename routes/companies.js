@@ -11,6 +11,7 @@ const Company = require("../models/company");
 
 const companyNewSchema = require("../schemas/companyNew.json");
 const companyUpdateSchema = require("../schemas/companyUpdate.json");
+const filterCompanySchema = require("../schemas/filterCompany.json");
 
 const router = new express.Router();
 
@@ -28,7 +29,7 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
   const validator = jsonschema.validate(
     req.body,
     companyNewSchema,
-    {required: true}
+    { required: true }
   );
   if (!validator.valid) {
     const errs = validator.errors.map(e => e.stack);
@@ -53,10 +54,32 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
 router.get("/", async function (req, res, next) {
   // http://localhost:3001/companies/?minEmployees=5
   // if req.query exists
-    // validate the keys contained in req.query then filter if so
-    // min/max convert into an integer
-    // calling our model static function and AWAIT
-    // {minEmployees: 5}
+  // validate the keys contained in req.query then filter if so
+  // min/max convert into an integer
+  // calling our model static function and AWAIT
+  // {minEmployees: 5}
+  if (req.query) {
+    if (req.query.minEmployees) req.query.minEmployees = +req.query.minEmployees;
+    if (req.query.maxEmployees) req.query.maxEmployees = +req.query.maxEmployees;
+
+    const validator = jsonschema.validate(
+      req.query,
+      filterCompanySchema,
+      { required: true }
+    );
+
+    if (!validator.valid) {
+      const errs = validator.errors.map(e => e.stack);
+      throw new BadRequestError(errs);
+    }
+
+    if (req.query.minEmployees > req.query.maxEmployees) {
+      throw new BadRequestError('min needs to be less than max');
+    }
+    const filteredCompanies = await Company.findSome(req.query)
+
+
+  }
   const companies = await Company.findAll();
 
 
@@ -91,7 +114,7 @@ router.patch("/:handle", ensureLoggedIn, async function (req, res, next) {
   const validator = jsonschema.validate(
     req.body,
     companyUpdateSchema,
-    {required:true}
+    { required: true }
   );
   if (!validator.valid) {
     const errs = validator.errors.map(e => e.stack);
