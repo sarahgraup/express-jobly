@@ -75,6 +75,7 @@ router.get("/:username",
   ensureLoggedIn,
   ensureSameUserOrAdmin,
   async function (req, res, next) {
+    console.debug("INSIDE VIEW FUNCTION /users/:username");
     const user = await User.get(req.params.username);
     return res.json({ user });
 });
