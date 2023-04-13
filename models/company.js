@@ -77,8 +77,6 @@ class Company {
    * */
 
   static async findSome(filterBy) {
-    // TODO: filterBy is obj  // {minEmployees: 5}
-    // check which variables - nameLike, minEmployees, maxEmployees
     console.log("in findSome");
     const criterias = [];
     const values = [];
@@ -98,7 +96,7 @@ class Company {
       criterias.push(`"num_employees" <= $${values.length}`);
     }
     const where= criterias.join(" AND ");
-    
+
     const filteredCompaniesRes = await db.query(
         `SELECT handle,
                 name,
