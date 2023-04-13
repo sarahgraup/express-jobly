@@ -49,9 +49,25 @@ function ensureIsAdmin(req, res, next){
   throw new UnauthorizedError();
 }
 
+/** Middleware for ensuring same user or admin for creating, updating, deleting
+ * user
+ * If not, raises Unauthorized
+ */
+
+  function ensureSameUserOrAdmin(req, res, next) {
+    const currentUser = res.locals.user;
+
+    if (currentUser.username === req.params.username){
+      return next();
+    }
+
+    ensureIsAdmin(req, res, next);
+}
+
 
 module.exports = {
   authenticateJWT,
   ensureLoggedIn,
   ensureIsAdmin,
+  ensureSameUserOrAdmin
 };
