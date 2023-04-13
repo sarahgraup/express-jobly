@@ -2,6 +2,17 @@ const { BadRequestError } = require("../expressError");
 const { sqlForPartialUpdate } = require("./sql");
 
 describe("sqlForPartialUpdate", function () {
+    test("works with multiple value update", function () {
+      const result = sqlForPartialUpdate(
+          { numEmployees: 5, age: 10 },
+          { numEmployees: "num_employees" }
+      );
+      expect(result).toEqual({
+          setCols: `"num_employees"=$1, "age"=$2`,
+          values: [5, 10]
+      });
+
+    });
     test("works with one value update", function () {
         const result = sqlForPartialUpdate(
             { numEmployees: 5 },
@@ -19,9 +30,4 @@ describe("sqlForPartialUpdate", function () {
             (sqlForPartialUpdate({}))
         }).toThrow(new BadRequestError("No data"));
     });
-    //test for multiple variables that doesnt have snake to camel
-    //like age
-
-
-
 })
