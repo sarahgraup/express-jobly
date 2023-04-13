@@ -39,7 +39,19 @@ function ensureLoggedIn(req, res, next) {
 }
 
 
+/** Middleware to use for creating, updating, and deleting companies user must be admin
+ * If not, raises Unauthorized
+ */
+function ensureIsAdmin(req, res, next){
+  if(res.locals.user.isAdmin===true){
+    return next();
+  }
+  throw new UnauthorizedError();
+}
+
+
 module.exports = {
   authenticateJWT,
   ensureLoggedIn,
+  ensureIsAdmin,
 };
