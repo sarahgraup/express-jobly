@@ -131,7 +131,7 @@ class Company {
 
     const where = criterias.join(" AND ");
 
-    return {where, values};
+    return { where, values };
   }
 
   /** Given a company handle, return data about company.
