@@ -188,8 +188,29 @@ describe("findSome", function () {
     ]);
   });
 });
-//add testing for min>max - regular error message 
+//add testing for min>max - regular error message
 
+
+/************************************** _createSqlFilter */
+
+describe("_createSqlFilter", function () {
+  test("works: for one input", function () {
+    const filterObj = {minEmployees: 2};
+    const sqlData = Company._createSqlFilter(filterObj);
+    expect(sqlData).toEqual({where: 'num_employees >= $1', values: [2]});
+  });
+
+  test("works: for multiple input", function () {
+    const filterObj = {nameLike: "net", minEmployees: 5};
+    const sqlData = Company._createSqlFilter(filterObj);
+    expect(sqlData).toEqual(
+      {
+        where: `name ILIKE $1 AND num_employees >= $2`,
+        values: ["%net%", 5]
+      }
+    );
+  });
+});
 
 /************************************** get */
 
