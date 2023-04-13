@@ -69,10 +69,6 @@ router.get("/", async function (req, res, next) {
     query.maxEmployees = +query.maxEmployees;
   }
 
-  if (query.minEmployees > query.maxEmployees) {
-    throw new BadRequestError('min needs to be less than max');
-  }
-
   const validator = jsonschema.validate(
     query,
     filterCompanySchema,
@@ -83,10 +79,14 @@ router.get("/", async function (req, res, next) {
     const errs = validator.errors.map(e => e.stack);
     throw new BadRequestError(errs);
   }
-
-  companies = await Company.findSome(query);
-  return res.json({ companies });
-
+  
+  try{
+    companies = await Company.findSome(query);
+    return res.json({ companies }); 
+  }
+  catch(err){
+    throw new BadRequestError(err)
+  }
 });
 
 /** GET /[handle]  =>  { company }

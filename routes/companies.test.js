@@ -98,7 +98,7 @@ describe("GET /companies", function () {
 
   test("filtering works", async function () {
     const resp = await request(app).get("/companies")
-    .query({ minEmployees: 3 });
+      .query({ minEmployees: 3 });
     expect(resp.body).toEqual({
       companies: [
         {
@@ -114,7 +114,7 @@ describe("GET /companies", function () {
 
   test("filtering works if no companies adhere to filter", async function () {
     const resp = await request(app).get("/companies")
-    .query({minEmployees: 5});
+      .query({ minEmployees: 5 });
     expect(resp.body).toEqual({
       companies: []
     });
@@ -124,8 +124,16 @@ describe("GET /companies", function () {
 test("fails - filtering throws error if minEmployees > max", async function () {
   const resp = await request(app)
     .get("/companies")
-    .query({minEmployees: 5, maxEmployees: 3});
+    .query({ minEmployees: 5, maxEmployees: 3 });
   expect(resp.statusCode).toEqual(400);
+});
+
+test("fails- throws error if one query filter invalid", async function () {
+  const resp = await request(app)
+    .get("/companies")
+    .query({ maxEmployees: true });
+  expect(resp.statusCode).toEqual(400);
+
 });
 
 test("fails: test next() handler", async function () {
