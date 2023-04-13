@@ -89,3 +89,29 @@ describe("ensureIsAdmin", function () {
     expect(() => ensureIsAdmin(req, res, next)).toThrowError();
   });
 });
+
+describe("ensureSameUserOrAdmin", function () {
+  test("works - is same user", function () {
+    const req = { params: { username: "test" } };
+    const res = { locals: { user: { username: "test" } } };
+    ensureSameUserOrAdmin(req, res, next);
+  });
+
+  test("works - is admin user", function () {
+    const req = { params: { username: "test" } };
+    const res = { locals: { user: { username: "admin", isAdmin: true } } };
+    ensureSameUserOrAdmin(req, res, next);
+  });
+
+  test("unauth if not same user nor admin", function () {
+    const req = { params: { username: "test" } };
+    const res = { locals: { user: { username: "otherUser", isAdmin: false } } };
+    expect(() => ensureSameUserOrAdmin(req, res, next)).toThrowError();
+  });
+
+  test("unauth if no user", function () {
+    const req = { params: { username: "test" } };
+    const res = { locals: {} };
+    expect(() => ensureSameUserOrAdmin(req, res, next)).toThrowError();
+  });
+});
