@@ -77,31 +77,13 @@ class Company {
    * */
 
   static async findSome(filterBy) {
-    const criterias = [];
-    const values = [];
-
-    if (filterBy.minEmployees !== undefined 
+    if (filterBy.minEmployees !== undefined
       && filterBy.maxEmployees !== undefined
       && filterBy.minEmployees > filterBy.maxEmployees) {
       throw new Error('min needs to be less than max');
     }
-//possibly seperate function into private static 
-    if (filterBy.nameLike !== undefined) {
-      values.push(`%${filterBy.nameLike}%`);
-      criterias.push(`name ILIKE $${values.length}`);
-    }
 
-    if (filterBy.minEmployees !== undefined) {
-      values.push(filterBy.minEmployees);
-      criterias.push(`"num_employees" >= $${values.length}`);
-    }
-
-    if (filterBy.maxEmployees !== undefined) {
-      values.push(filterBy.maxEmployees);
-      criterias.push(`"num_employees" <= $${values.length}`);
-    }
-
-    const where = criterias.join(" AND ");
+    const { where, values } = this._createSqlFilter(filterBy);
 
     const filteredCompaniesRes = await db.query(
       `SELECT handle,
@@ -119,6 +101,38 @@ class Company {
   }
 
 
+  /**
+   * Private Method for building SQL where clause and values for findSome
+   * @param {Object} filterBy
+   * Not all filters required.
+   * example: {nameLike: "net", minEmployees: 5}
+   *
+   * Returns {where: `name ILIKE $1 AND num_employees >= $2` values: ["net", 5]}
+   */
+
+  static _createSqlFilter(filterBy) {
+    const criterias = [];
+    const values = [];
+
+    if (filterBy.nameLike !== undefined) {
+      values.push(`%${filterBy.nameLike}%`);
+      criterias.push(`name ILIKE $${values.length}`);
+    }
+
+    if (filterBy.minEmployees !== undefined) {
+      values.push(filterBy.minEmployees);
+      criterias.push(`"num_employees" >= $${values.length}`);
+    }
+
+    if (filterBy.maxEmployees !== undefined) {
+      values.push(filterBy.maxEmployees);
+      criterias.push(`"num_employees" <= $${values.length}`);
+    }
+
+    const where = criterias.join(" AND ");
+
+    return {where, values};
+  }
 
   /** Given a company handle, return data about company.
    *
