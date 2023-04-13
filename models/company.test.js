@@ -147,7 +147,7 @@ describe("findSome", function () {
   });
 
   test("works: filter by company name - c", async function () {
-    const filterObj = {nameLike: c};
+    const filterObj = {nameLike: 'c'};
     let companies = await Company.findSome(filterObj);
     expect(companies).toEqual([
       {
@@ -175,7 +175,7 @@ describe("findSome", function () {
   });
 
   test("works: filter by company name - c1", async function () {
-    const filterObj = {nameLike: c1};
+    const filterObj = {nameLike: 'c1'};
     let companies = await Company.findSome(filterObj);
     expect(companies).toEqual([
       {
