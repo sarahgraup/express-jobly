@@ -121,10 +121,11 @@ describe("GET /companies", function () {
   });
 });
 
+// FIXME:
 test("fails - filtering throws error if minEmployees > max", async function () {
-  const resp = await request(app)
-    .get("/companies")
-    .query({ minEmployees: 5, maxEmployees: 3 });
+  const resp = await request(app).get("/companies").query({ minEmployees: 5, maxEmployees: 3 });
+  console.log('RESPONSE IN TEST: ', resp);
+  expect(resp.error.text.error.message).toEqual('min needs to be less than max');
   expect(resp.statusCode).toEqual(400); //check for words for bad request error- min needs to be
 });
 
