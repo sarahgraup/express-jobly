@@ -187,8 +187,13 @@ describe("findSome", function () {
       }
     ]);
   });
+
+  test("throws error if minEmployees > maxEmployees", async function () {
+    await expect(Company.findSome({minEmployees: 10, maxEmployees: 5}))
+      .rejects
+      .toThrow(new Error('min needs to be less than max'));
+  });
 });
-//add testing for min>max - regular error message
 
 
 /************************************** _createSqlFilter */
