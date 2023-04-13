@@ -8,8 +8,7 @@ const { BadRequestError } = require("../expressError");
  *  example: {numEmployees: "num_employees",logoUrl: "logo_url"}
  * 
  * @returns {Object} {sqlsetCols, sqlvalues}
- * example: {setCols:'"first_name"=$1, "age"=$2', 
- * values: ['Aliya', 32] }
+ * example: {setCols:'"first_name"=$1, "age"=$2', values: ['Aliya', 32] }
  */
 
 function sqlForPartialUpdate(dataToUpdate, jsToSql) {

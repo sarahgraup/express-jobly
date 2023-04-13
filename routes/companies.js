@@ -79,12 +79,12 @@ router.get("/", async function (req, res, next) {
     const errs = validator.errors.map(e => e.stack);
     throw new BadRequestError(errs);
   }
-  
-  try{
+
+  try {
     companies = await Company.findSome(query);
-    return res.json({ companies }); 
+    return res.json({ companies });
   }
-  catch(err){
+  catch (err) {
     throw new BadRequestError(err)
   }
 });

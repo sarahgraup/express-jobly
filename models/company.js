@@ -85,7 +85,7 @@ class Company {
       && filterBy.minEmployees > filterBy.maxEmployees) {
       throw new Error('min needs to be less than max');
     }
-
+//possibly seperate function into private static 
     if (filterBy.nameLike !== undefined) {
       values.push(`%${filterBy.nameLike}%`);
       criterias.push(`name ILIKE $${values.length}`);

@@ -188,6 +188,7 @@ describe("findSome", function () {
     ]);
   });
 });
+//add testing for min>max - regular error message 
 
 
 /************************************** get */

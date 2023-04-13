@@ -125,14 +125,14 @@ test("fails - filtering throws error if minEmployees > max", async function () {
   const resp = await request(app)
     .get("/companies")
     .query({ minEmployees: 5, maxEmployees: 3 });
-  expect(resp.statusCode).toEqual(400);
+  expect(resp.statusCode).toEqual(400); //check for words for bad request error- min needs to be
 });
 
 test("fails- throws error if one query filter invalid", async function () {
   const resp = await request(app)
     .get("/companies")
     .query({ maxEmployees: true });
-  expect(resp.statusCode).toEqual(400);
+  expect(resp.statusCode).toEqual(400); //testing json schema error message
 
 });
 

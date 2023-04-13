@@ -19,6 +19,8 @@ describe("sqlForPartialUpdate", function () {
             (sqlForPartialUpdate({}))
         }).toThrow(new BadRequestError("No data"));
     });
+    //test for multiple variables that doesnt have snake to camel
+    //like age
 
 
 
