@@ -218,6 +218,17 @@ describe("PATCH /companies/:handle", function () {
     });
   });
 
+  test("anauth for non isAdmin", async function(){
+    const resp = await request(app)
+    .patch(`/companies/c1`)
+    .send({
+      name: "C1-new",
+    })
+    .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(401);
+  });
+
+
   test("unauth for anon", async function () {
     const resp = await request(app)
       .patch(`/companies/c1`)
@@ -279,5 +290,12 @@ describe("DELETE /companies/:handle", function () {
       .delete(`/companies/nope`)
       .set("authorization", `Bearer ${adminToken}`);
     expect(resp.statusCode).toEqual(404);
+  });
+
+  test("unauth for non isAdmin", async function () {
+    const resp = await request(app)
+      .delete(`/companies/c1`)
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(401);
   });
 });
