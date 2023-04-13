@@ -5,7 +5,8 @@ const { UnauthorizedError } = require("../expressError");
 const {
   authenticateJWT,
   ensureLoggedIn,
-  ensureIsAdmin
+  ensureIsAdmin,
+  ensureSameUserOrAdmin
 } = require("./auth");
 
 
