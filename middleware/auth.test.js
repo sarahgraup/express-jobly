@@ -12,7 +12,6 @@ const {
 
 const { SECRET_KEY } = require("../config");
 const testJwt = jwt.sign({ username: "test", isAdmin: false }, SECRET_KEY);
-const testAdmin = jwt.sign({ username: "admin", isAdmin: true }, SECRET_KEY);
 const badJwt = jwt.sign({ username: "test", isAdmin: false }, "wrong");
 
 function next(err) {
