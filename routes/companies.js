@@ -85,7 +85,8 @@ router.get("/", async function (req, res, next) {
     return res.json({ companies });
   }
   catch (err) {
-    throw new BadRequestError(err)
+    console.log("ERR IN GET / ROUTE", err);
+    throw new BadRequestError(err.message);
   }
 });
 
