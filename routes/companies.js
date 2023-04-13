@@ -52,51 +52,43 @@ router.post("/", ensureLoggedIn, async function (req, res, next) {
  */
 
 router.get("/", async function (req, res, next) {
-  // http://localhost:3001/companies/?minEmployees=5
-  // if req.query exists
-  // validate the keys contained in req.query then filter if so
-  // min/max convert into an integer
-  // calling our model static function and AWAIT
-  // {minEmployees: 5}
 
-  if (req.query) {
-    const query = {...req.query};
+  let companies;
+  console.log(req.query);
 
-    if (query.minEmployees) {
-      query.minEmployees = +query.minEmployees;
-    }
-
-    if (query.maxEmployees){
-      query.maxEmployees = +query.maxEmployees;
-    }
-
-    if (query.minEmployees > query.maxEmployees) {
-      throw new BadRequestError('min needs to be less than max');
-    }
-
-    console.log("TYPE OF MIN/MAX EMPLOYEE", typeof(query.minEmployees), typeof(query.maxEmployees));
-    console.log('REQ QUERY', query);
-
-    const validator = jsonschema.validate(
-      query,
-      filterCompanySchema,
-      { required: true }
-    );
-
-    if (!validator.valid) {
-      const errs = validator.errors.map(e => e.stack);
-      throw new BadRequestError(errs);
-    }
-
-    console.log("I'M VALID!!!!");
-    const filteredCompanies = await Company.findSome(query);
-
-    return res.json({ filteredCompanies });
+  if (Object.keys(req.query).length === 0) {
+    companies = await Company.findAll();
+    return res.json({ companies });
   }
 
-  const companies = await Company.findAll();
+  const query = { ...req.query };
 
+  if (query.minEmployees) {
+    query.minEmployees = +query.minEmployees;
+  }
+
+  if (query.maxEmployees) {
+    query.maxEmployees = +query.maxEmployees;
+  }
+
+  if (query.minEmployees > query.maxEmployees) {
+    throw new BadRequestError('min needs to be less than max');
+  }
+
+  const validator = jsonschema.validate(
+    query,
+    filterCompanySchema,
+    { required: true }
+  );
+
+  if (!validator.valid) {
+    const errs = validator.errors.map(e => e.stack);
+    throw new BadRequestError(errs);
+  }
+
+  companies = await Company.findSome(query);
   return res.json({ companies });
+
 });
 
 /** GET /[handle]  =>  { company }

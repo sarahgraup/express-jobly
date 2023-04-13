@@ -55,6 +55,7 @@ class Company {
    * */
 
   static async findAll() {
+    console.log("in findAll");
     const companiesRes = await db.query(
         `SELECT handle,
                 name,
@@ -78,24 +79,25 @@ class Company {
   static async findSome(filterBy) {
     // TODO: filterBy is obj  // {minEmployees: 5}
     // check which variables - nameLike, minEmployees, maxEmployees
+    console.log("in findSome");
     const criterias = [];
+    const values = [];
 
-    if (filterBy.nameLike) {
-      criterias.push(`name ILIKE '%${filterBy.nameLike}%'`);
+    if (filterBy.nameLike !== undefined) {
+      values.push(`%${filterBy.nameLike}%`);
+      criterias.push(`name ILIKE $${values.length}'`);
     }
-    if(filterBy.minEmployees){
-      criterias.push(`"num_employees" >= ${filterBy.minEmployees}`);
+    if(filterBy.minEmployees!== undefined){
+      values.push(filterBy.minEmployees);
+      criterias.push(`"num_employees" >= $${values.length}`);
+      console.log(values);
+      console.log(criterias);
     }
-    if(filterBy.maxEmployees){
-      criterias.push(`"num_employees" <= ${filterBy.maxEmployees}`);
+    if(filterBy.maxEmployees !== undefined){
+      values.push(filterBy.maxEmployees);
+      criterias.push(`"num_employees" <= $${values.length}`);
     }
-
-    console.log("CRITERIAS", criterias);
-    const criteriaSql = criterias.join(" AND ");
-    console.log("CRITERIA SQL", criteriaSql);
-    `FROM companies ${WHERE}`
-
-    `WHERE name ILIKE $1`
+    const where= criterias.join(" AND ");
     
     const filteredCompaniesRes = await db.query(
         `SELECT handle,
@@ -104,10 +106,11 @@ class Company {
                 num_employees AS "numEmployees",
                 logo_url AS "logoUrl"
            FROM companies
-           WHERE $1
+           WHERE ${where}
            ORDER BY name`,
-        [criteriaSql]
+        values
     );
+    console.log(filteredCompaniesRes.rows);
     return filteredCompaniesRes.rows;
   }
 
