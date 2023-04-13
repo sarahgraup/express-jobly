@@ -121,12 +121,12 @@ class Company {
 
     if (filterBy.minEmployees !== undefined) {
       values.push(filterBy.minEmployees);
-      criterias.push(`"num_employees" >= $${values.length}`);
+      criterias.push(`num_employees >= $${values.length}`);
     }
 
     if (filterBy.maxEmployees !== undefined) {
       values.push(filterBy.maxEmployees);
-      criterias.push(`"num_employees" <= $${values.length}`);
+      criterias.push(`num_employees <= $${values.length}`);
     }
 
     const where = criterias.join(" AND ");
