@@ -35,17 +35,17 @@ function authenticateJWT(req, res, next) {
 
 function ensureLoggedIn(req, res, next) {
   console.debug("ensureLoggedIn RAN");
-    if (!res.locals.user) throw new UnauthorizedError();
-    return next();
+  if (!res.locals.user) throw new UnauthorizedError();
+  return next();
 }
 
 
 /** Middleware to use for creating, updating, and deleting companies user must be admin
  * If not, raises Unauthorized
  */
-function ensureIsAdmin(req, res, next){
+function ensureIsAdmin(req, res, next) {
   console.debug("ensureIsAdmin RAN");
-  if(res.locals.user.isAdmin===true){
+  if (res.locals.user.isAdmin === true) {
     return next();
   }
   throw new UnauthorizedError();
@@ -56,15 +56,15 @@ function ensureIsAdmin(req, res, next){
  * If not, raises Unauthorized
  */
 
-  function ensureSameUserOrAdmin(req, res, next) {
-    console.debug("ensureSameUserOrAdmin RAN");
-    const currentUser = res.locals.user;
+function ensureSameUserOrAdmin(req, res, next) {
+  console.debug("ensureSameUserOrAdmin RAN");
+  const currentUser = res.locals.user;
 
-    if (currentUser.username === req.params.username){
-      return next();
-    }
+  if (currentUser.username === req.params.username) {
+    return next();
+  }
 
-    ensureIsAdmin(req, res, next);
+  ensureIsAdmin(req, res, next);
 }
 
 
