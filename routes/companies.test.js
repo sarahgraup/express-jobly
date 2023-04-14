@@ -30,7 +30,7 @@ describe("POST /companies", function () {
     numEmployees: 10,
   };
 
-  test("ok for users", async function () {
+  test("ok for admin", async function () {
     const resp = await request(app)
       .post("/companies")
       .send(newCompany)
@@ -41,7 +41,7 @@ describe("POST /companies", function () {
     });
   });
 
-  test("bad request with missing data", async function () {
+  test("bad request with missing data for admin", async function () {
     const resp = await request(app)
       .post("/companies")
       .send({
@@ -52,7 +52,7 @@ describe("POST /companies", function () {
     expect(resp.statusCode).toEqual(400);
   });
 
-  test("bad request with invalid data", async function () {
+  test("bad request with invalid data for admin", async function () {
     const resp = await request(app)
       .post("/companies")
       .send({
@@ -63,7 +63,7 @@ describe("POST /companies", function () {
     expect(resp.statusCode).toEqual(400);
   });
 
-  test("unauthorized for non isAdmin", async function () {
+  test("unauthorized for non-admin valid data", async function () {
     const resp = await request(app)
       .post("/companies")
       .send(newCompany)
@@ -71,7 +71,27 @@ describe("POST /companies", function () {
     expect(resp.statusCode).toEqual(401);
   });
 
-  //add unauth for invalid data for non admin
+  test("unauthorized for non-admin missing data", async function () {
+    const resp = await request(app)
+      .post("/companies")
+      .send({
+        handle: "new",
+        numEmployees: 10,
+      })
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(401);
+  });
+
+  test("unauthorized for non-admin invalid data", async function () {
+    const resp = await request(app)
+      .post("/companies")
+      .send({
+        ...newCompany,
+        logoUrl: "not-a-url",
+      })
+      .set("authorization", `Bearer ${u1Token}`);
+    expect(resp.statusCode).toEqual(401);
+  });
 });
 
 
@@ -136,7 +156,9 @@ describe("GET /companies", function () {
 
 
 test("fails - filtering throws error if minEmployees > max", async function () {
-  const resp = await request(app).get("/companies").query({ minEmployees: 5, maxEmployees: 3 });
+  const resp = await request(app).
+    get("/companies")
+    .query({ minEmployees: 5, maxEmployees: 3 });
   expect(resp.error.text).toEqual('{"error":{"message":"min needs to be less than max","status":400}}');
   expect(resp.statusCode).toEqual(400);
 });
