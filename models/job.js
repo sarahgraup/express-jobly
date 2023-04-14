@@ -3,6 +3,7 @@
 const db = require("../db");
 const { BadRequestError, NotFoundError } = require("../expressError");
 const { sqlForPartialUpdate } = require("../helpers/sql");
+const Company = require("./company");
 
 
 /** Related functions for jobs */
@@ -11,10 +12,37 @@ class Job {
 
   /** Create a job (from data), update db, return new job data
    * @param {title, salary, equity, company_handle}
+   * If companyHandle does not exist, throws notFoundError - ask if calling
+   * another function to throw error is okay?
    *
    * Returns {id, title, salary, equity, company_handle}
    */
-  static async create({title, salary, equity, company_handle}) {
+  static async create({ title, salary, equity, companyHandle }) {
+    //if no company throw error
+
+    await Company.get(companyHandle);
+
+    const result = await db.query(
+      `
+      INSERT INTO jobs(
+        title,
+        salary,
+        equity,
+        company_handle)
+        VALUES
+          ($1, $2, $3, $4)
+          RETURNING id, title, salary, equity, company_handle AS "companyHandle"`,
+      [
+        title,
+        salary,
+        equity,
+        companyHandle
+      ],
+    );
+
+    const job = result.rows[0];
+    console.log("job:", job);
+    return job;
 
   }
 
@@ -22,7 +50,7 @@ class Job {
    *
    * Return [{id, title, salary, equity, company_handle}, ...]
    */
-  static async findAll(){
+  static async findAll() {
 
   }
 
@@ -32,7 +60,7 @@ class Job {
    *
    * Returns [{id, title, salary, equity, company_handle}, ...]
   */
-  static async findSome(filterBy){
+  static async findSome(filterBy) {
 
   }
 
@@ -44,7 +72,7 @@ class Job {
    *
    * Throws NotFoundError if not found
   */
-  static async get(jobId){
+  static async get(jobId) {
 
   }
 
@@ -59,7 +87,7 @@ class Job {
    *
    * Throws NotFoundError if not found
   */
-  static async update(jobId, data){
+  static async update(jobId, data) {
 
   }
 
@@ -67,7 +95,7 @@ class Job {
    *
    * Throws NotFoundError if job not found
    */
-  static async remove(jobId){
+  static async remove(jobId) {
 
   }
 

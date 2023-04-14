@@ -9,12 +9,14 @@ async function commonBeforeAll() {
   // noinspection SqlWithoutWhere
   await db.query("DELETE FROM users");
 
+  //creating test companies
   await db.query(`
     INSERT INTO companies(handle, name, num_employees, description, logo_url)
     VALUES ('c1', 'C1', 1, 'Desc1', 'http://c1.img'),
            ('c2', 'C2', 2, 'Desc2', 'http://c2.img'),
            ('c3', 'C3', 3, 'Desc3', 'http://c3.img')`);
 
+  //creating test users
   await db.query(`
         INSERT INTO users(username,
                           password,
@@ -24,10 +26,19 @@ async function commonBeforeAll() {
         VALUES ('u1', $1, 'U1F', 'U1L', 'u1@email.com'),
                ('u2', $2, 'U2F', 'U2L', 'u2@email.com')
         RETURNING username`,
-      [
-        await bcrypt.hash("password1", BCRYPT_WORK_FACTOR),
-        await bcrypt.hash("password2", BCRYPT_WORK_FACTOR),
-      ]);
+    [
+      await bcrypt.hash("password1", BCRYPT_WORK_FACTOR),
+      await bcrypt.hash("password2", BCRYPT_WORK_FACTOR),
+    ]);
+
+  //creating test jobs
+  await db.query(`
+    INSERT INTO jobs(title, salary, equity, company_handle)
+    VALUES('job1', 100, '1', 'c1'),
+          ('job1', 100, '1', 'c1')
+          ('job2', 200, null, 'c2'),
+          ('job3', 300, '0.5', 'c3')`);
+
 }
 
 async function commonBeforeEach() {
