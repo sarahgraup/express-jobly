@@ -63,7 +63,7 @@ describe("POST /companies", function () {
     expect(resp.statusCode).toEqual(400);
   });
 
-  test("unauthorized for non isAdmin", async function(){
+  test("unauthorized for non isAdmin", async function () {
     const resp = await request(app)
       .post("/companies")
       .send(newCompany)
@@ -72,7 +72,7 @@ describe("POST /companies", function () {
   });
 });
 
-  
+
 
 /************************************** GET /companies */
 
@@ -218,13 +218,13 @@ describe("PATCH /companies/:handle", function () {
     });
   });
 
-  test("anauth for non isAdmin", async function(){
+  test("anauth for non isAdmin", async function () {
     const resp = await request(app)
-    .patch(`/companies/c1`)
-    .send({
-      name: "C1-new",
-    })
-    .set("authorization", `Bearer ${u1Token}`);
+      .patch(`/companies/c1`)
+      .send({
+        name: "C1-new",
+      })
+      .set("authorization", `Bearer ${u1Token}`);
     expect(resp.statusCode).toEqual(401);
   });
 
