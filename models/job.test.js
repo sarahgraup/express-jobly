@@ -66,44 +66,45 @@ describe("create", function () {
 // */
 
 
-
-
-
 // /************************************** findAll */
 
-// describe("findAll", function () {
-//   test("works: no filter", async function () {
-//     let jobs = await Job.findAll();
-//     expect(jobs).toEqual([
-//       {
-//         title: 'job1',
-//         salary: 100,
-//         equity: '1',
-//         companyHandle: 'c1'
+describe("findAll", function () {
+  test("works: finds all jobs", async function () {
+    let jobs = await Job.findAll();
+    expect(jobs).toEqual([
+      {
+        id: expect.any(Number),
+        title: 'job1',
+        salary: 100,
+        equity: '1',
+        companyHandle: 'c1'
 
-//       },
-//       {
-//         title: 'job1',
-//         salary: 100,
-//         equity: '1',
-//         companyHandle: 'c1'
+      },
+      {
+        id: expect.any(Number),
+        title: 'job1',
+        salary: 100,
+        equity: '1',
+        companyHandle: 'c1'
 
-//       },
-//       {
-//         title: 'job2',
-//         salary: 200,
-//         equity: null,
-//         companyHandle: 'c2'
-//       },
-//       {
-//         title: 'job3',
-//         salary: 300,
-//         equity: '0.5',
-//         companyHandle: 'c3'
-//       },
-//     ]);
-//   });
-// });
+      },
+      {
+        id: expect.any(Number),
+        title: 'job2',
+        salary: 200,
+        equity: null,
+        companyHandle: 'c2'
+      },
+      {
+        id: expect.any(Number),
+        title: 'job3',
+        salary: 300,
+        equity: '0.5',
+        companyHandle: 'c3'
+      },
+    ]);
+  });
+});
 
 // /************************************** findSome */
 // /**
