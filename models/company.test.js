@@ -192,6 +192,8 @@ describe("findSome", function () {
     await expect(Company.findSome({minEmployees: 10, maxEmployees: 5}))
       .rejects
       .toThrow(new Error('min needs to be less than max'));
+      // .toThrow('min needs to be less than max')
+      // .toThrow(BadRequestError)
   });
 });
 
