@@ -106,112 +106,119 @@ describe("findAll", function () {
   });
 });
 
-// /************************************** findSome */
-// /**
-//  * filter by title
-//  * filter by has equity and min salary
-//  * filter not found
-//  * filter not work if bad input
-//  */
-// describe("findSome", function () {
-//   test("works: filter by title", async function () {
-//     const filterObj = { titleLike: 'job1' };
-//     let jobs = await Job.findSome(filterObj);
-//     expect(jobs).toEqual([
-//       {
-//         title: 'job1',
-//         salary: 100,
-//         equity: '1',
-//         companyHandle: 'c1'
+/************************************** findSome */
+/**
+ * filter by title
+ * filter by has equity and min salary
+ * filter not found
+ * filter not work if bad input
+ */
+describe("findSome", function () {
+  test("works: filter by title", async function () {
+    const filterObj = { titleLike: 'job1' };
+    let jobs = await Job.findSome(filterObj);
+    expect(jobs).toEqual([
+      {
+        title: 'job1',
+        salary: 100,
+        equity: '1',
+        companyHandle: 'c1'
 
-//       },
-//       {
-//         title: 'job1',
-//         salary: 100,
-//         equity: '1',
-//         companyHandle: 'c1'
+      },
+      {
+        title: 'job1',
+        salary: 100,
+        equity: '1',
+        companyHandle: 'c1'
 
-//       },
-//     ]);
-//   });
+      },
+    ]);
+  });
 
-//   test("works: filter by equity AND min salary", async function () {
-//     const filterObj = { equity: true, minSalary: 200 };
-//     let jobs = await Job.findSome(filterObj);
-//     expect(jobs).toEqual([
-//       {
-//         title: 'job3',
-//         salary: 300,
-//         equity: '0.5',
-//         companyHandle: 'c3'
-//       }
-//     ]);
-//   });
+  test("works: filter by equity AND min salary", async function () {
+    const filterObj = { equity: true, minSalary: 200 };
+    let jobs = await Job.findSome(filterObj);
+    expect(jobs).toEqual([
+      {
+        title: 'job3',
+        salary: 300,
+        equity: '0.5',
+        companyHandle: 'c3'
+      }
+    ]);
+  });
 
-//   test("works: filter by equity", async function () {
-//     const filterObj = { equity: false };
-//     let jobs = await Job.findSome(filterObj);
-//     expect(jobs).toEqual([
-//       {
-//         title: 'job2',
-//         salary: 200,
-//         equity: null,
-//         companyHandle: 'c2'
-//       }
-//     ]);
-//   });
+  test("works: filter by equity", async function () {
+    const filterObj = { equity: false };
+    let jobs = await Job.findSome(filterObj);
+    expect(jobs).toEqual([
+      {
+        title: 'job2',
+        salary: 200,
+        equity: null,
+        companyHandle: 'c2'
+      }
+    ]);
+  });
 
-//   test("works: filter by job title - 1", async function () {
-//     const filterObj = { titleLike: '1' };
-//     let jobs = await Job.findSome(filterObj);
-//     expect(jobs).toEqual([
-//       {
-//         title: 'job1',
-//         salary: 100,
-//         equity: '1',
-//         companyHandle: 'c1'
+  test("works: filter by job title - 1", async function () {
+    const filterObj = { titleLike: '1' };
+    let jobs = await Job.findSome(filterObj);
+    expect(jobs).toEqual([
+      {
+        title: 'job1',
+        salary: 100,
+        equity: '1',
+        companyHandle: 'c1'
 
-//       },
-//       {
-//         title: 'job1',
-//         salary: 100,
-//         equity: '1',
-//         companyHandle: 'c1'
+      },
+      {
+        title: 'job1',
+        salary: 100,
+        equity: '1',
+        companyHandle: 'c1'
 
-//       },
-//     ]);
-//   });
+      },
+    ]);
+  });
 
-//   test("works: filter by job title and equity if no matches ", async function () {
-//     const filterObj = { nameLike: 'job1', equity: false };
-//     let jobs = await Job.findSome(filterObj);
-//     expect(jobs).toEqual([]);
-//   });
-
-
-// });
+  test("works: filter by job title and equity if no matches ", async function () {
+    const filterObj = { nameLike: 'job1', equity: false };
+    let jobs = await Job.findSome(filterObj);
+    expect(jobs).toEqual([]);
+  });
 
 
-// /************************************** _createSqlFilter */
+});
 
-// // describe("_createSqlFilter", function () {
-// //   test("works: for one input", function () {
-// //     const filterObj = {minEmployees: 2};
-// //     const sqlData = Company._createSqlFilter(filterObj);
-// //     expect(sqlData).toEqual({where: 'num_employees >= $1', values: [2]});
-// //   });
 
-// //   test("works: for multiple input", function () {
-// //     const filterObj = {nameLike: "net", minEmployees: 5};
-// //     const sqlData = Company._createSqlFilter(filterObj);
-// //     expect(sqlData).toEqual(
-// //       {
-// //         where: `name ILIKE $1 AND num_employees >= $2`,
-// //         values: ["%net%", 5]
-// //       }
-// //     );
-// //   });
-// // });
+/************************************** _createSqlFilter */
+
+// * example: {titleLike: "net", minSalary: 50000, hasEquity: true}
+// *
+// * Returns {
+// *          where: `title ILIKE $1 AND salary >= $2 AND equity > 0`,
+// *          values: ["net", 50000]
+// * }
+
+describe("_createSqlFilter", function () {
+  test("works: for one input", function () {
+    const filterObj = {minSalary: 200};
+    const sqlData = Job._createSqlFilter(filterObj);
+    expect(sqlData).toEqual({where: 'salary >= $1', values: [200]});
+  });
+
+  test("works: for multiple input", function () {
+    const filterObj = {titleLike: "job", minSalary: 300, hasEquity: true};
+    const sqlData = Job._createSqlFilter(filterObj);
+    expect(sqlData).toEqual(
+      {
+        where: `title ILIKE $1 AND salary >= $2 AND equity > 0`,
+        values: ["%job%", 300]
+      }
+    );
+  });
+});
 
 // /************************************** get */
 // /**
