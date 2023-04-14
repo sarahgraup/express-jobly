@@ -12,8 +12,7 @@ class Job {
 
   /** Create a job (from data), update db, return new job data
    * @param {title, salary, equity, company_handle}
-   * If companyHandle does not exist, throws notFoundError - ask if calling
-   * another function to throw error is okay?
+   * If companyHandle does not exist, throws notFoundError
    *
    * Returns {id, title, salary, equity, company_handle}
    */
@@ -41,9 +40,8 @@ class Job {
     );
 
     const job = result.rows[0];
-    console.log("job:", job);
-    return job;
 
+    return job;
   }
 
   /** Find all jobs
@@ -51,7 +49,19 @@ class Job {
    * Return [{id, title, salary, equity, company_handle}, ...]
    */
   static async findAll() {
+    console.log("in Jobs findAll");
 
+    const response = await db.query(
+      `SELECT id,
+              title,
+              salary,
+              equity,
+              company_handle AS "companyHandle"
+           FROM jobs
+           ORDER BY company_handle, title`
+    );
+
+    return response.rows;
   }
 
   /** Find matching jobs based on filter
