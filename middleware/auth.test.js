@@ -71,7 +71,7 @@ describe("ensureIsAdmin", function () {
 
   test("unauth if isAdmin false", function () {
     const req = {};
-    const res = { locals: { user: { username: "admin", isAdmin: false } } };
+    const res = { locals: { user: { username: "admin", isAdmin: false } } }; //cahnge name
     expect(() => ensureIsAdmin(req, res, next))
       .toThrowError(new UnauthorizedError());
   });
@@ -86,7 +86,7 @@ describe("ensureIsAdmin", function () {
   test("unauth if no user", function () {
     const req = {};
     const res = { locals: {} };
-    expect(() => ensureIsAdmin(req, res, next)).toThrowError();
+    expect(() => ensureIsAdmin(req, res, next)).toThrowError();//specify unauth
   });
 });
 
@@ -112,6 +112,7 @@ describe("ensureSameUserOrAdmin", function () {
   test("unauth if no user", function () {
     const req = { params: { username: "test" } };
     const res = { locals: {} };
-    expect(() => ensureSameUserOrAdmin(req, res, next)).toThrowError();
+    expect(() => ensureSameUserOrAdmin(req, res, next)).toThrowError();//specify error
   });
+  //add same user and admin
 });

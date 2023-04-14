@@ -23,7 +23,7 @@ afterAll(commonAfterAll);
 /************************************** POST /users */
 
 describe("POST /users", function () {
-  test("works for users: create non-admin", async function () {
+  test("works for users: create non-admin", async function () { //works for admin
     const resp = await request(app)
       .post("/users")
       .send({
@@ -47,7 +47,7 @@ describe("POST /users", function () {
     });
   });
 
-  test("works for users: create admin", async function () {
+  test("works for users: create admin", async function () { //works for admin
     const resp = await request(app)
       .post("/users")
       .send({
@@ -124,12 +124,14 @@ describe("POST /users", function () {
       .set("authorization", `Bearer ${adminToken}`);
     expect(resp.statusCode).toEqual(400);
   });
+
+  //add unauth for anon
 });
 
 /************************************** GET /users */
 
 describe("GET /users", function () {
-  test("works for users", async function () {
+  test("works for users", async function () {//works for admin
     const resp = await request(app)
       .get("/users")
       .set("authorization", `Bearer ${adminToken}`);
@@ -195,7 +197,7 @@ describe("GET /users", function () {
 /************************************** GET /users/:username */
 
 describe("GET /users/:username", function () {
-  test("works for users", async function () {
+  test("works for users", async function () {//same user
     const resp = await request(app)
       .get(`/users/u1`)
       .set("authorization", `Bearer ${u1Token}`);
@@ -237,6 +239,7 @@ describe("GET /users/:username", function () {
       .set("authorization", `Bearer ${adminToken}`);
     expect(resp.statusCode).toEqual(404);
   });
+  //make sure unauth for not same user for exisiting or non existing user
 });
 
 /************************************** PATCH /users/:username */
@@ -316,6 +319,7 @@ describe("PATCH /users/:username", () => {
       .set("authorization", `Bearer ${u1Token}`);
     expect(resp.statusCode).toEqual(400);
   });
+  //add if different user or if user does not exist for non admins getting unauth
 
   test("works: set new password", async function () {
     const resp = await request(app)
@@ -341,7 +345,7 @@ describe("PATCH /users/:username", () => {
 /************************************** DELETE /users/:username */
 
 describe("DELETE /users/:username", function () {
-  test("works for users", async function () {
+  test("works for users", async function () {//same user
     const resp = await request(app)
       .delete(`/users/u1`)
       .set("authorization", `Bearer ${u1Token}`);
@@ -361,7 +365,7 @@ describe("DELETE /users/:username", function () {
     expect(resp.statusCode).toEqual(401);
   });
 
-  test("not found if user missing", async function () {
+  test("not found if user missing", async function () {//as admin
     const resp = await request(app)
       .delete(`/users/nope`)
       .set("authorization", `Bearer ${adminToken}`);
@@ -374,4 +378,5 @@ describe("DELETE /users/:username", function () {
       .set("authorization", `Bearer ${u1Token}`);
     expect(resp.statusCode).toEqual(401);
   });
+  //anon for non existent user unauth
 });

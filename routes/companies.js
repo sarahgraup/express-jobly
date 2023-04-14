@@ -26,7 +26,7 @@ const router = new express.Router();
  */
 
 router.post("/",
-  ensureLoggedIn,
+  ensureLoggedIn,//get rid of loggedin
   ensureIsAdmin,
   async function (req, res, next) {
     const validator = jsonschema.validate(
@@ -118,7 +118,7 @@ router.get("/:handle", async function (req, res, next) {
  */
 
 router.patch("/:handle",
-  ensureLoggedIn,
+  ensureLoggedIn,//no need
   ensureIsAdmin,
   async function (req, res, next) {
     const validator = jsonschema.validate(
@@ -141,7 +141,7 @@ router.patch("/:handle",
  */
 
 router.delete("/:handle",
-  ensureLoggedIn,
+  ensureLoggedIn,//get rid
   ensureIsAdmin,
   async function (req, res, next) {
     await Company.remove(req.params.handle);
