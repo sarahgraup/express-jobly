@@ -72,7 +72,21 @@ class Job {
   */
 
   static async findSome(filterBy) {
+    const { where, values } = this._createSqlFilter(filterBy);
 
+    const filteredJobsRes = await db.query(
+      `SELECT id,
+              title,
+              salary,
+              equity,
+              company_handle AS "companyHandle"
+           FROM jobs
+           WHERE ${where}
+           ORDER BY company_handle, title`,
+      values
+    );
+
+    return filteredJobsRes.rows;
   }
 
    /**
@@ -102,7 +116,6 @@ class Job {
     }
 
     if (filterBy.hasEquity === true) {
-      values.push(filterBy.hasEquity);
       criterias.push(`equity > 0`);
     }
 
