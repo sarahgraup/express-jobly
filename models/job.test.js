@@ -119,6 +119,7 @@ describe("findSome", function () {
     let jobs = await Job.findSome(filterObj);
     expect(jobs).toEqual([
       {
+        id: expect.any(Number),
         title: 'job1',
         salary: 100,
         equity: '1',
@@ -126,6 +127,7 @@ describe("findSome", function () {
 
       },
       {
+        id: expect.any(Number),
         title: 'job1',
         salary: 100,
         equity: '1',
@@ -140,6 +142,7 @@ describe("findSome", function () {
     let jobs = await Job.findSome(filterObj);
     expect(jobs).toEqual([
       {
+        id: expect.any(Number),
         title: 'job3',
         salary: 300,
         equity: '0.5',
@@ -149,15 +152,32 @@ describe("findSome", function () {
   });
 
   test("works: filter by equity", async function () {
-    const filterObj = { equity: false };
+    const filterObj = { equity: true };
     let jobs = await Job.findSome(filterObj);
     expect(jobs).toEqual([
       {
-        title: 'job2',
-        salary: 200,
-        equity: null,
-        companyHandle: 'c2'
-      }
+        id: expect.any(Number),
+        title: 'job1',
+        salary: 100,
+        equity: '1',
+        companyHandle: 'c1'
+
+      },
+      {
+        id: expect.any(Number),
+        title: 'job1',
+        salary: 100,
+        equity: '1',
+        companyHandle: 'c1'
+
+      },
+      {
+        id: expect.any(Number),
+        title: 'job3',
+        salary: 300,
+        equity: '0.5',
+        companyHandle: 'c3'
+      },
     ]);
   });
 
@@ -166,6 +186,7 @@ describe("findSome", function () {
     let jobs = await Job.findSome(filterObj);
     expect(jobs).toEqual([
       {
+        id: expect.any(Number),
         title: 'job1',
         salary: 100,
         equity: '1',
@@ -173,6 +194,7 @@ describe("findSome", function () {
 
       },
       {
+        id: expect.any(Number),
         title: 'job1',
         salary: 100,
         equity: '1',
@@ -187,8 +209,6 @@ describe("findSome", function () {
     let jobs = await Job.findSome(filterObj);
     expect(jobs).toEqual([]);
   });
-
-
 });
 
 
