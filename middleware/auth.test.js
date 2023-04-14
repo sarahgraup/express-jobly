@@ -18,6 +18,10 @@ function next(err) {
   if (err) throw new Error("Got error from middleware");
 }
 
+/* FIXME: Code review feedback lines 76/91/117:
+Add type of error with message expected */
+
+
 describe("authenticateJWT", function () {
   test("works: via header", function () {
     const req = { headers: { authorization: `Bearer ${testJwt}` } };

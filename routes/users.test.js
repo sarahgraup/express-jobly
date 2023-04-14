@@ -20,6 +20,33 @@ beforeEach(commonBeforeEach);
 afterEach(commonAfterEach);
 afterAll(commonAfterAll);
 
+/*
+- Okay for admin
+
+For same user or admin add:
+  - Okay if same user
+  - Okay if same user and admin
+  - Okay for other user but admin
+
+- bad request invalid data for admin
+- bad request missing data for admin
+- bad handle change for admin
+
+- Unauth for non-admin valid data
+- Unauth for non-admin invalid data
+- Unauth for non-admin missing data
+- Unauth for non-admin handle change
+
+- Unauth for anon valid data
+- Unauth for anon invalid data
+- Unauth for anon missing data
+- Unauth for anon handle change
+
+
+Test if checking
+- User/company doesn't exist test for all
+*/
+
 /************************************** POST /users */
 
 describe("POST /users", function () {
