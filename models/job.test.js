@@ -11,7 +11,7 @@ const {
   commonBeforeAll,
   commonBeforeEach,
   commonAfterEach,
-  commonAfterAll,
+  commonAfterAll
 } = require("./_testCommon");
 
 beforeAll(commonBeforeAll);
@@ -26,16 +26,29 @@ describe("create", function () {
     companyHandle: "c1",
     title: "New Job",
     salary: 100,
-    equity: 1,
+    equity: "1",
   };
 
   test("works", async function () {
-    let job = await Job.create(newJob);
+    const job = await Job.create(newJob);
     expect(job).toEqual({
       ...newJob,
       id: expect.any(Number),
     });
 
+  });
+
+  test("fails - company not found", async function () {
+    const jobFakeCompany = {
+      companyHandle: "fake",
+      title: "New Job",
+      salary: 100,
+      equity: "1",
+    };
+
+    await expect(Job.create(jobFakeCompany))
+      .rejects
+      .toThrow(new NotFoundError(`No company: fake`));
   });
 });
 // /** For admin
@@ -46,7 +59,7 @@ describe("create", function () {
 // for non-admin
 // unauth if not found
 // unauth if missing
-// unauth 
+// unauth
 
 // for anon
 
@@ -201,8 +214,8 @@ describe("create", function () {
 
 // /************************************** get */
 // /**
-//  * works 
-//  * not found if no such company 
+//  * works
+//  * not found if no such company
 //  */
 
 // describe("get", function () {
@@ -229,7 +242,7 @@ describe("create", function () {
 
 // /************************************** update */
 // /**
-//  * works 
+//  * works
 //  * works if null fields
 //  * not found for no such company
 //  * bad request if no data
