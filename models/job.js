@@ -9,7 +9,6 @@ const { sqlForPartialUpdate } = require("../helpers/sql");
 
 class Job {
 
-  // create job
   /** Create a job (from data), update db, return new job data
    * @param {title, salary, equity, company_handle}
    *
@@ -19,9 +18,23 @@ class Job {
 
   }
 
-  // findAll jobs
+  /** Find all jobs
+   *
+   * Return [{id, title, salary, equity, company_handle}, ...]
+   */
+  static async findAll(){
 
-  // findSome jobs
+  }
+
+  /** Find matching jobs based on filter
+   *
+   * @param {Object} filterBy {title, minSalary, hasEquity}
+   *
+   * Returns [{id, title, salary, equity, company_handle}, ...]
+  */
+  static async findSome(filterBy){
+
+  }
 
   // get job (on id)
 
