@@ -59,7 +59,7 @@ router.post("/",
  **/
 
 router.get("/",
-  ensureLoggedIn,
+  // ensureLoggedIn,
   ensureIsAdmin,
   async function (req, res, next) {
     const users = await User.findAll();
