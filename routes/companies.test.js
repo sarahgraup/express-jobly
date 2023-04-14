@@ -95,7 +95,6 @@ describe("POST /companies", function () {
 });
 
 
-
 /************************************** GET /companies */
 
 describe("GET /companies", function () {
@@ -154,12 +153,15 @@ describe("GET /companies", function () {
   });
 });
 
-
 test("fails - filtering throws error if minEmployees > max", async function () {
   const resp = await request(app).
     get("/companies")
     .query({ minEmployees: 5, maxEmployees: 3 });
-  expect(resp.error.text).toEqual('{"error":{"message":"min needs to be less than max","status":400}}');
+  expect(resp.error.text).toEqual(`{
+    "error":{
+      "message":"min needs to be less than max",
+      "status":400
+  }}`);
   expect(resp.statusCode).toEqual(400);
 });
 
@@ -168,10 +170,12 @@ test("fails- throws error if one query filter invalid", async function () {
     .get("/companies")
     .query({ maxEmployees: true });
   expect(resp.statusCode).toEqual(400);
-
   expect(resp.error.text)
-    .toEqual('{"error":{"message":["instance.maxEmployees is not of a type(s) integer"],"status":400}}')
-
+    .toEqual(`{
+      "error":{
+        "message":["instance.maxEmployees is not of a type(s) integer"],
+        "status":400
+    }}`);
 });
 
 test("fails: test next() handler", async function () {
