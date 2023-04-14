@@ -70,8 +70,45 @@ class Job {
    *
    * Returns [{id, title, salary, equity, company_handle}, ...]
   */
+
   static async findSome(filterBy) {
 
+  }
+
+   /**
+   * Private Method for building SQL where clause and values for findSome
+   * @param {Object} filterBy
+   * Not all filters required
+   * example: {titleLike: "net", minSalary: 200, hasEquity: true}
+   *
+   * Returns {
+   *          where: `title ILIKE $1 AND salary >= $2 AND equity > 0`,
+   *          values: ["net", 200]
+   * }
+   */
+
+  static _createSqlFilter(filterBy){
+    const criterias = [];
+    const values = [];
+
+    if (filterBy.titleLike !== undefined) {
+      values.push(`%${filterBy.titleLike}%`);
+      criterias.push(`title ILIKE $${values.length}`);
+    }
+
+    if (filterBy.minSalary !== undefined) {
+      values.push(filterBy.minSalary);
+      criterias.push(`salary >= $${values.length}`);
+    }
+
+    if (filterBy.hasEquity === true) {
+      values.push(filterBy.hasEquity);
+      criterias.push(`equity > 0`);
+    }
+
+    const where = criterias.join(" AND ");
+
+    return { where, values };
   }
 
   /** Given a job id, return data about job
