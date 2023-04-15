@@ -131,7 +131,11 @@ router.patch("/:handle",
       throw new BadRequestError(errs);
     }
 
-    const company = await Company.update(req.params.handle, req.body);
+    const {name, description, numEmployees, logoUrl} = req.body;
+    const company = await Company.update(req.params.handle, {
+      name, description, numEmployees, logoUrl
+    });
+    // const company = await Company.update(req.params.handle, req.body);
     return res.json({ company });
   });
 

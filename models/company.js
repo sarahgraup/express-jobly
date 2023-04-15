@@ -173,6 +173,7 @@ class Company {
    */
 
   static async update(handle, data) {
+    // console.assert(typeof data.numEmployees=== 'number');
     const { setCols, values } = sqlForPartialUpdate(
       data,
       {

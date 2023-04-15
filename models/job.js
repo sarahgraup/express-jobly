@@ -89,19 +89,19 @@ class Job {
     return filteredJobsRes.rows;
   }
 
-   /**
-   * Private Method for building SQL where clause and values for findSome
-   * @param {Object} filterBy
-   * Not all filters required
-   * example: {titleLike: "net", minSalary: 200, hasEquity: true}
-   *
-   * Returns {
-   *          where: `title ILIKE $1 AND salary >= $2 AND equity > 0`,
-   *          values: ["net", 200]
-   * }
-   */
+  /**
+  * Private Method for building SQL where clause and values for findSome
+  * @param {Object} filterBy
+  * Not all filters required
+  * example: {titleLike: "net", minSalary: 200, hasEquity: true}
+  *
+  * Returns {
+  *          where: `title ILIKE $1 AND salary >= $2 AND equity > 0`,
+  *          values: ["net", 200]
+  * }
+  */
 
-  static _createSqlFilter(filterBy){
+  static _createSqlFilter(filterBy) {
     const criterias = [];
     const values = [];
 
@@ -133,6 +133,22 @@ class Job {
    * Throws NotFoundError if not found
   */
   static async get(jobId) {
+    const jobRes = await db.query(
+      `SELECT id,
+              title,
+              salary,
+              equity,
+              company_handle AS "companyHandle"
+        FROM jobs
+           WHERE id = $1`,
+      [jobId]);
+
+    const job = jobRes.rows[0];
+
+    if (!job) throw new NotFoundError(`No job: ${jobId}`);
+
+    return job;
+
 
   }
 
@@ -148,6 +164,26 @@ class Job {
    * Throws NotFoundError if not found
   */
   static async update(jobId, data) {
+    console.log(data);
+    const { setCols, values } = sqlForPartialUpdate(data,{});
+    const idVarIdx = "$" + (values.length + 1);
+
+    const querySql = `
+      UPDATE jobs
+      SET ${setCols}
+        WHERE id = ${idVarIdx}
+        RETURNING id, title, salary, equity, company_handle AS "companyHandle"`;
+    try{
+      const result = await db.query(querySql, [...values, jobId]);
+      const job = result.rows[0];
+      return job;
+
+    }
+    catch(err){
+      console.log(err);
+      throw new NotFoundError(`No job: ${jobId}`)
+
+    }
 
   }
 
